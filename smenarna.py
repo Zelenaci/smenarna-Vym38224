@@ -25,27 +25,63 @@ class Application(tk.Tk):
 
     def __init__(self):
         super().__init__(className=self.name)
-        v = tk.IntVar(self)
+        v1 = tk.IntVar(self)
+        v2 = tk.IntVar(self)
         self.title(self.name)
         self.lbl = tk.Label(self, text="Směnárna", borderwidth=14)
         self.lbl.pack()
-        self.lbl1 = tk.Label(self, text="Transakce")
+        #Transakce
+        self.lbl1 = tk.Label(self, text="Transakce:")
         self.lbl1.pack(anchor=W)
-        self.radiobutton1 = Radiobutton(self, text="Nákup", variable=v, value=1).pack(anchor=W)
-        self.radiobutton2 = Radiobutton(self, text="Prodej", variable=v, value=2).pack(anchor=W)
-        self.lbl1 = tk.Label(self, text="Měna")
+        self.radiobutton1 = Radiobutton(self, text="Nákup", variable=v1, value=1).pack(anchor=W)
+        self.radiobutton2 = Radiobutton(self, text="Prodej", variable=v1, value=2).pack(anchor=W)
+        #Měna
+        self.lbl1 = tk.Label(self, text="Měna:")
         self.lbl1.pack(anchor=W)
-        self.listbox = Listbox(self)
-        self.listbox.insert(END,Měna)
-        for item in [u"EUR", u"GBP", u"USD", u"JPY", u"IDR"]
-        self.listbox.insert(END, item)
+        self.radiobutton3 = Radiobutton(self, text="EUR", variable=v2, value=1).pack(anchor=W)
+        self.radiobutton4 = Radiobutton(self, text="GBP", variable=v2, value=2).pack(anchor=W)
+        self.radiobutton5 = Radiobutton(self, text="USD", variable=v2, value=3).pack(anchor=W)
+        self.radiobutton6 = Radiobutton(self, text="JPY", variable=v2, value=4).pack(anchor=W)
+        self.radiobutton7 = Radiobutton(self, text="IDR", variable=v2, value=5).pack(anchor=W)
+        #Kurz
+        self.lbl1 = tk.Label(self, text="Kurz:")
+        self.lbl1.pack(anchor=W)
+        self.listbox2 = Listbox(self,height=2)
+        self.listbox2.pack(anchor=W)
+        for item in [u"", u""]:
+            self.listbox2.insert(END, item)
+       
+        
+        #Výpočet
+        self.lbl1 = tk.Label(self, text="Výpočet:")
+        self.lbl1.pack(anchor=W)
+        self.listbox3 = Listbox(self,height=1)
+        self.listbox3.pack(anchor=W)
+        for item in [u""]:
+            self.listbox3.insert(END, item)
+        self.btn2 = tk.Button(self, text="Výpočet", command=self.vypocet)
+        self.btn2.pack(anchor=E)
+        self.listbox4 = Listbox(self,height=1)
+        self.listbox4.pack(anchor=W)
+        for item in [u""]:
+            self.listbox4.insert(END, item)
 
-        self.lbl1 = tk.Label(self, text="Kurz")
-        self.lbl1.pack(anchor=W)
+        #Quit
         self.bind("<Escape>", self.quit)
-        #quit
-        self.btn = tk.Button(self, text="Quit", command=self.quit)
-        self.btn.pack()
+        self.btn1 = tk.Button(self, text="Quit", command=self.quit)
+        self.btn1.pack()
+
+    def vypocet(self):  
+        pass
+
+
+
+    def listBoxFill(self):
+        f = open('listek.txt', 'r')
+        slovnik = {}
+        for line in f:
+            self.listBox.insert(tk.END,line.split()[0])
+            slovnik[line.split()[0]] = (line.split()[1:])
         
 
     def quit(self, event=None):
