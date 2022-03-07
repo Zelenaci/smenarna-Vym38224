@@ -30,58 +30,80 @@ class Application(tk.Tk):
         self.title(self.name)
         self.lbl = tk.Label(self, text="Směnárna", borderwidth=14)
         self.lbl.pack()
+
         #Transakce
         self.lbl1 = tk.Label(self, text="Transakce:")
         self.lbl1.pack(anchor=W)
         self.radiobutton1 = Radiobutton(self, text="Nákup", variable=v1, value=1).pack(anchor=W)
         self.radiobutton2 = Radiobutton(self, text="Prodej", variable=v1, value=2).pack(anchor=W)
+
         #Měna
-        self.lbl1 = tk.Label(self, text="Měna:")
-        self.lbl1.pack(anchor=W)
-        self.radiobutton3 = Radiobutton(self, text="EUR", variable=v2, value=1).pack(anchor=W)
-        self.radiobutton4 = Radiobutton(self, text="GBP", variable=v2, value=2).pack(anchor=W)
-        self.radiobutton5 = Radiobutton(self, text="USD", variable=v2, value=3).pack(anchor=W)
-        self.radiobutton6 = Radiobutton(self, text="JPY", variable=v2, value=4).pack(anchor=W)
-        self.radiobutton7 = Radiobutton(self, text="IDR", variable=v2, value=5).pack(anchor=W)
-        #Kurz
-        self.lbl1 = tk.Label(self, text="Kurz:")
-        self.lbl1.pack(anchor=W)
-        self.listbox2 = Listbox(self,height=2)
-        self.listbox2.pack(anchor=W)
-        for item in [u"", u""]:
-            self.listbox2.insert(END, item)
-       
+        self.lbl2 = tk.Label(self, text="Měna:")
+        self.lbl2.pack(anchor=W)
+        self.listbox = Listbox(self)
+        self.listbox.pack(anchor=W)
+        self.listbox.bind("<ButtonRelease-1>", self.kliknu)
         
+        f = open('listek.txt')
+        self.radky = f.readlines()
+
+        for radek in self.radky:
+            radek = radek.split()
+            self.listbox.insert(END, radek[0])
+
+        #Kurz
+        self.lbl3 = tk.Label(self, text="Kurz:")
+        self.lbl3.pack(anchor=W)
+        self.amount = tk.IntVar()
+        self.price = tk.IntVar()
+        self.vysledek = tk.IntVar()
+        self.amountLbl= tk.Label(self, textvariable= self.amount) 
+        self.amountLbl.pack()
+        self.priceLbl= tk.Label(self, textvariable= self.price) 
+        self.priceLbl.pack()
+    
+
+
+       
         #Výpočet
-        self.lbl1 = tk.Label(self, text="Výpočet:")
-        self.lbl1.pack(anchor=W)
-        self.listbox3 = Listbox(self,height=1)
-        self.listbox3.pack(anchor=W)
-        for item in [u""]:
-            self.listbox3.insert(END, item)
+        self.lbl2 = tk.Label(self, text="Výpočet:")
+        self.lbl2.pack(anchor=W)
+        self.entry1 = tk.Entry(self)
+        self.entry1.pack()
         self.btn2 = tk.Button(self, text="Výpočet", command=self.vypocet)
         self.btn2.pack(anchor=E)
-        self.listbox4 = Listbox(self,height=1)
-        self.listbox4.pack(anchor=W)
-        for item in [u""]:
-            self.listbox4.insert(END, item)
+        self.lbl3 = tl.Label(self, text="")
+        self.lbl3.pack(anchor=W))
 
         #Quit
         self.bind("<Escape>", self.quit)
         self.btn1 = tk.Button(self, text="Quit", command=self.quit)
         self.btn1.pack()
 
+        
+
     def vypocet(self):  
-        pass
+        e = self.entry.get()
+        a = self.amount.get()
+        p = self.price.get()
+        self.vysledekVar = round(e*p/a)
+        self.vysledek.set(self.vysledekVar)
+
+    
+    def kliknu(self, event):
+        index = self.listbox.curselection()[0]
+        f = open("listek.txt")
+        self.lines = f.readlines()
+        self.amountVar = self.lines[index].split()[1]
+        self.amount.set(self.amountVar)
+        self.priceVar = self.lines[index].split()[2] 
+        self.price.set(self.priceVar)
+        print(self.radky[index])
 
 
-
-    def listBoxFill(self):
-        f = open('listek.txt', 'r')
-        slovnik = {}
-        for line in f:
-            self.listBox.insert(tk.END,line.split()[0])
-            slovnik[line.split()[0]] = (line.split()[1:])
+          
+        
+        
         
 
     def quit(self, event=None):
